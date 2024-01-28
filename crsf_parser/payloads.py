@@ -8,6 +8,8 @@ from construct import (
     Int24ub,
     Int8sb,
     Int8ub,
+    Int32sb,
+    Int16sb,
 )
 from construct.core import Struct
 
@@ -31,6 +33,15 @@ PAYLOADS_SIZE: "dict[int, int]" = {
     PacketsTypes.RC_CHANNELS_PACKED: 22,
     PacketsTypes.ATTITUDE: 6,
 }
+
+payload_gps = Struct(
+    "latitude" / Int32sb,
+    "longitude" / Int32sb,
+    "ground_speed" / Int16sb,
+    "ground_course" / Int16sb,
+    "altitude" / Int16ub,
+    "satellite_count" / Int8ub,
+)
 
 payload_heartbeat = Struct("origin_device_address" / Int8ub)
 
@@ -65,4 +76,8 @@ payload_link_statistics = Struct(
 
 payload_rc_channels_packed = ByteSwapped(
     BitStruct("channels" / Array(16, BitsInteger(11)))
+)
+
+payload_attitude = Struct(
+    "pitch" / Int16sb, "roll" / Int16sb, "yaw" / Int16sb
 )
